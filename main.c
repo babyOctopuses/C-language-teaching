@@ -24,7 +24,7 @@ int main(){
         myGuess = getGuesses(guess);
         checkGuess(myGuess, target);
         guess++;
-        if (guess == target) {
+        if (myGuess == target) {
         break;
     }
     };
