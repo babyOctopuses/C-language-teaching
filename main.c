@@ -2,62 +2,85 @@
 #include <stdlib.h>
 #include <time.h>
 
-void printPrompt();
-int generateNumber(int min, int max);
-int getGuesses(int guess);
-void checkGuess(int myGuess, int target);
+// function prototypes
+void printMenu();
+void printPokemon(char*);
+int attack(int, int);
+void playGame(char*, int);
 
-//learn about function
-int main(){
-    int num;
-    int myGuess;
-    
-    srand(time(NULL));
+int main() {
+  // set up random number generator
+  srand(time(NULL));
 
-    int target = generateNumber(1,100);
-    int guess = 0;
+  char playerName[20];
+  int playerHP = 100;
 
-    
-    printPrompt();
+  printf("Welcome to the Pokemon game!\n");
+  printf("Enter your name: ");
+  scanf("%s", playerName);
 
-    while(1){
-        myGuess = getGuesses(guess);
-        checkGuess(myGuess, target);
-        guess++;
-        if (myGuess == target) {
+  playGame(playerName, playerHP);
+
+  printf("Thanks for playing!\n");
+  return 0;
+}
+
+void playGame(char* playerName, int playerHP) {
+  char opponent[10] = "Pikachu";
+  int opponentHP = 100;
+
+  printf("\n%s, your opponent is:\n", playerName);
+  printPokemon(opponent);
+
+  // loop until someone wins or loses
+  while (playerHP > 0 && opponentHP > 0) {
+    printMenu();
+
+    int choice;
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+      case 1:
+        // player attacks
+        opponentHP -= attack(10, 20);
+        printf("You attacked %s!\n", opponent);
+        printf("%s's HP is now %d.\n", opponent, opponentHP);
+        break;
+      case 2:
+        // opponent attacks
+        playerHP -= attack(5, 15);
+        printf("%s attacked you!\n", opponent);
+        printf("Your HP is now %d.\n", playerHP);
+        break;
+      default:
+        printf("Invalid choice.\n");
         break;
     }
-    };
+  }
 
-    printf("Thank you for playing");
-
-    return 0;
+  // print winner or loser
+  if (playerHP > 0) {
+    printf("%s wins!\n", playerName);
+  } else {
+    printf("%s wins!\n", opponent);
+  }
 }
 
-void printPrompt(){
-    printf("\nplease choose 1-100\n");
-    printf("can you guess the number?\n");
+void printMenu() {
+  printf("1. Attack\n");
+  printf("2. Defend\n");
 }
 
-int generateNumber(int min, int max){
-    int num = (rand() % (max-min+1))+min;
-    return num;
+void printPokemon(char* name) {
+  printf("    ,___,\n");
+  printf("   /     \\\n");
+  printf("  |  %s |\n", name);
+  printf("  \\     /\n");
+  printf("   `---'\n");
 }
 
-int getGuesses(int guess){
-    printf("\nGuess #%d: ", guess+1);
-    
-    int myGuess;
-    scanf("%d", &myGuess);
-    return myGuess;
-}
-
-void checkGuess(int myGuess, int target){
-    if(myGuess<target){
-        printf("\ntoo low, enter higer number");
-    }else if(myGuess > target){
-        printf("\ntoo high, enter a lower number");
-    }else{
-        printf("Correct");
-    }
+int attack(int min, int max) {
+  // generate a random number between min and max inclusive
+  return rand() % (max - min + 1) + min;
 }
